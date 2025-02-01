@@ -16,6 +16,37 @@ exports.createSupermarket = async (req, res) => {
   }
 };
 
+// Atualizar supermercado
+exports.updateSupermarket = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const supermarket = await Supermarket.findOneAndUpdate(
+      { _id: id, createdBy: req.user.id }, // Só permite atualizar se o usuário for o dono
+      req.body,
+      { new: true }
+    );
+    if (!supermarket) throw new Error('Supermercado não encontrado');
+    res.json(supermarket);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+// Excluir supermercado
+exports.deleteSupermarket = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const supermarket = await Supermarket.findOneAndDelete({
+      _id: id,
+      createdBy: req.user.id
+    });
+    if (!supermarket) throw new Error('Supermercado não encontrado');
+    res.json({ message: 'Supermercado excluído' });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
 // Listar todos os supermercados do usuário
 exports.getSupermarkets = async (req, res) => {
   try {

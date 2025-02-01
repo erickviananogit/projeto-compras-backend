@@ -31,6 +31,37 @@ exports.createProduct = async (req, res) => {
   }
 };
 
+// Atualizar produto
+exports.updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findOneAndUpdate(
+      { _id: id, createdBy: req.user.id }, // Só permite atualizar se o usuário for o dono
+      req.body,
+      { new: true }
+    );
+    if (!product) throw new Error('Produto não encontrado');
+    res.json(product);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+// Excluir produto
+exports.deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findOneAndDelete({
+      _id: id,
+      createdBy: req.user.id
+    });
+    if (!product) throw new Error('Produto não encontrado');
+    res.json({ message: 'Produto excluído' });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
 // Listar produtos do usuário (com filtros opcionais)
 exports.getProducts = async (req, res) => {
   try {

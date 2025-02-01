@@ -12,6 +12,37 @@ exports.createCategory = async (req, res) => {
   }
 };
 
+// Atualizar categoria
+exports.updateCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const category = await Category.findOneAndUpdate(
+      { _id: id, createdBy: req.user.id }, // Só permite atualizar se o usuário for o dono
+      req.body,
+      { new: true }
+    );
+    if (!category) throw new Error('Categoria não encontrada');
+    res.json(category);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+// Excluir categoria
+exports.deleteCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const category = await Category.findOneAndDelete({
+      _id: id,
+      createdBy: req.user.id
+    });
+    if (!category) throw new Error('Categoria não encontrada');
+    res.json({ message: 'Categoria excluída' });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
 // Listar categorias do usuário
 exports.getCategories = async (req, res) => {
   try {

@@ -33,3 +33,24 @@ exports.login = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+// Atualizar usuário
+exports.updateUser = async (req, res) => {
+  try {
+    const updates = req.body;
+    const user = await User.findByIdAndUpdate(req.user.id, updates, { new: true });
+    res.json(user);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Excluir usuário
+exports.deleteUser = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user.id);
+    res.json({ message: 'Usuário excluído com sucesso' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao excluir usuário' });
+  }
+};
