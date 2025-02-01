@@ -7,10 +7,6 @@ const supermarketSchema = new mongoose.Schema({
     required: [true, 'Nome do supermercado é obrigatório'],
     unique: true
   },
-  location: {
-    type: String,
-    required: [true, 'Localização é obrigatória']
-  },
   // Relacionamento com o usuário que criou o supermercado
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,

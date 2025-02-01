@@ -6,7 +6,6 @@ exports.createSupermarket = async (req, res) => {
     const { name, location } = req.body;
     const supermarket = new Supermarket({
       name,
-      location,
       createdBy: req.user.id // ID do usuário logado (vem do token JWT)
     });
     await supermarket.save();
